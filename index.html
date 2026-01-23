@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumos's AoE III Unit Icon Maker</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.min.js"></script>
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body class="min-h-screen">
+  <header class="max-w-6xl mx-auto px-4 py-10">
+    <div class="flex items-start justify-between gap-6 flex-col lg:flex-row">
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-semibold text-white">Lumos's AoE III Unit Icon Maker</h1>
+        <p class="text-slate-300 mt-3 max-w-2xl">
+          Icon generator tool for Age of Empires III DE
+          <br>
+          <small><em>All done in your browser, nothing uploaded anywhere</em></small>
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/60 border border-slate-700 hover:border-slate-500 hover:bg-slate-800 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span class="text-sm text-slate-300 group-hover:text-white transition-colors">GitHub Repo & Instructions</span>
+        </a>
+        <a href="https://zerovector.eu" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/60 border border-slate-700 hover:border-sky-500/50 hover:bg-slate-800 transition-all">
+          <img src="zv.svg" class="w-5 h-5 text-slate-400 group-hover:text-sky-400 transition-colors" />
+          <span class="text-sm text-slate-300 group-hover:text-white transition-colors">Zero Vector Studios</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-16 space-y-10">
+    <!-- Security Warning -->
+    <div id="cors-banner"
+      class="hidden bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
+      <div class="text-amber-400 shrink-0 mt-0.5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-amber-200 font-medium">Browser Security Warning</h3>
+        <p class="text-amber-200/80 text-sm mt-1">
+          It looks like you opened this file directly (file://). Modern browsers block saving images created from local
+          files for security reasons.
+          <br class="mb-2" />
+          To fix this, please run a local server (e.g., <code>docker compose up</code>,
+          <code>python -m http.server</code>, <code>bun run server.ts</code>) or open the Internet version of this.
+        </p>
+      </div>
+    </div>
+
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 shadow-lg">
+        <h2 class="text-lg font-semibold text-white">Portrait</h2>
+        <p class="text-sm text-slate-400 mb-3">
+          The base image to use. If you upload a transparent PNG (including one that uses an alpha channel), it will be
+          automatically split into a portrait and a mask.
+        </p>
+        <div id="drop-portrait"
+          class="drop-zone rounded-xl p-4 text-center cursor-pointer flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden group">
+          <input id="input-portrait" type="file" accept="image/*" class="hidden" />
+          <img id="preview-portrait" src="examples/settler_wagon_portrait_wiki.png" alt="Portrait"
+            class="max-w-full max-h-[512px] object-contain rounded-lg shadow-sm group-hover:opacity-80 transition-opacity transparency-grid"
+            crossorigin="anonymous" />
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity p-4">
+            <p class="text-white font-medium">Click or drop image here</p>
+            <p class="text-white font-medium">(512x512 px recommended)</p>
+            <p id="name-portrait" class="text-xs text-sky-300 mt-2 truncate max-w-full"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 shadow-lg">
+        <h2 class="text-lg font-semibold text-white">Alpha Mask</h2>
+        <p class="text-sm text-slate-400 mb-3">Greyscale mask to use for transparency. White = opaque, black =
+          transparent. If you upload a transparent PNG, it will be automatically converted to a mask.</p>
+        <div id="drop-mask"
+          class="drop-zone rounded-xl p-4 text-center cursor-pointer flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden group">
+          <input id="input-mask" type="file" accept="image/*" class="hidden" />
+          <img id="preview-mask" src="examples/settler_wagon_portrait_mask.png" alt="Alpha Mask"
+            class="max-w-full max-h-[512px] object-contain rounded-lg shadow-sm group-hover:opacity-80 transition-opacity transparency-grid"
+            crossorigin="anonymous" />
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity p-4">
+            <p class="text-white font-medium">Click or drop image here</p>
+            <p class="text-white font-medium">(512x512 px recommended)</p>
+            <p id="name-mask" class="text-xs text-amber-300 mt-2 truncate max-w-full"></p>
+          </div>
+          <button id="remove-mask"
+            class="absolute bottom-2 right-2 z-10 px-2 py-1 rounded-md bg-rose-600/80 hover:bg-rose-500 text-white text-xs font-medium transition-all opacity-0 group-hover:opacity-100">
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6L6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+              Clear
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-lg space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold text-white">Unit name</h2>
+          <p class="text-sm text-slate-400">Name to use in the filenames of exported images. If left blank, will be
+            automatically derived from an uploaded file.</p>
+        </div>
+        <input id="unit-name" type="text"
+          class="w-full sm:w-64 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 focus:border-sky-400 focus:outline-none text-white placeholder-slate-500"
+          placeholder="settler_wagon" />
+      </div>
+    </section>
+
+    <!-- Downloads -->
+    <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-lg">
+      <div class="flex flex-col gap-3">
+        <div>
+          <h2 class="text-lg font-semibold text-white">Quick export</h2>
+          <p class="text-sm text-slate-400">Download the game-ready portrait with alpha mask, or just the portrait RGB
+            (without transparency) or mask. Since <s>Photoshop</s> "some image editors" don't readily support PNG alpha
+            channels, the latter two options are useful if you want to split a portrait image extracted from the game.
+          </p>
+        </div>
+        <div id="quick-export-container" class="flex flex-wrap gap-3"></div>
+      </div>
+    </section>
+
+    <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-lg space-y-4">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-white">Standard frames</h2>
+          <p class="text-sm text-slate-400">You may choose individual icons to download. Hover over each for usage and
+            examples. Icon size is 128x128 px.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button id="select-all"
+            class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-sky-400 hover:text-sky-200">Select
+            all</button>
+          <button id="select-none"
+            class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-rose-400 hover:text-rose-200">Select
+            none</button>
+          <button id="download-selected-single"
+            class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium">Download selected
+            (ZIP)</button>
+          <button id="download-all-single"
+            class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium">Download all
+            single-colour (ZIP)</button>
+        </div>
+      </div>
+      <div id="single-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3"></div>
+    </section>
+
+    <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-lg space-y-5">
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-semibold text-white">Mixed frames</h2>
+            <p class="text-sm text-slate-400">Pick a primary (top-right) colour and a secondary (bottom-left) colour to
+              generate mixed frames. A colour will not combine with itself. All mixed-frame icons you see will be
+              considered "selected" for bulk download.</p>
+          </div>
+          <div class="flex flex-wrap gap-2 text-sm">
+            <button id="select-all-mixed"
+              class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-sky-400 hover:text-sky-200">Select
+              all combos</button>
+            <button id="select-none-mixed"
+              class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-rose-400 hover:text-rose-200">Select
+              none</button>
+            <button id="download-mixed"
+              class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium">Download mixed
+              (ZIP)</button>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="text-sm font-semibold text-white mb-2">Primary (top-right) colour</h3>
+            <div id="mixed-top-list" class="mixed-frame-colour-grid"></div>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-white mb-2">Secondary (bottom-left) colour</h3>
+            <div id="mixed-bottom-list" class="mixed-frame-colour-grid"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-white mb-2">Mixed frame previews</h3>
+        <div id="mixed-empty" class="text-center py-8 text-slate-500 border border-dashed border-slate-700 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto mb-3 opacity-50" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+          </svg>
+          <p class="text-sm font-medium">No mixed frames selected</p>
+          <p class="text-xs mt-1 text-slate-600">Choose at least one primary and one secondary colour above to generate
+            combinations.</p>
+        </div>
+        <div id="mixed-grid" class="flex flex-col gap-6"></div>
+      </div>
+    </section>
+
+    <!-- Global Download Button -->
+    <section
+      class="bg-gradient-to-r from-sky-900/40 to-emerald-900/40 border border-sky-700/50 rounded-2xl p-4 md:p-6 shadow-lg">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-semibold text-white">Download all icons</h2>
+          <p class="text-sm text-slate-300">All selected single-colour frames + all currently previewed mixed frames.
+          </p>
+        </div>
+        <button id="download-all-global"
+          class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-500 hover:to-emerald-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all">
+          Download all selected (ZIP)
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <template id="quick-export-template">
+    <div class="group relative">
+      <button class="px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-btn>
+        <span class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-icon>
+          </svg>
+          <span data-label></span>
+        </span>
+      </button>
+      <div
+        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-2 z-[100] w-64 pointer-events-none group-hover:pointer-events-auto">
+        <div
+          class="text-xs text-slate-200 bg-slate-950/95 border border-slate-700 rounded-lg p-3 shadow-2xl backdrop-blur-sm">
+          <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">Will be downloaded as</p>
+          <p class="text-sky-300 font-mono break-all text-[11px]" data-filename></p>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="frame-card-template">
+    <div
+      class="group relative bg-slate-900 border border-slate-800 rounded-xl p-2 sm:p-3 shadow-lg flex flex-col gap-2 hover:border-sky-500/60 transition-colors hover:z-50">
+      <div class="flex items-start justify-between gap-1">
+        <h3 class="text-sm font-semibold text-white truncate" data-name></h3>
+        <label class="flex items-center gap-1 text-xs text-slate-200 cursor-pointer select-none shrink-0">
+          <input type="checkbox" class="w-3.5 h-3.5 accent-sky-500" data-check />
+          <span class="hidden sm:inline">Select</span>
+        </label>
+      </div>
+      <div class="relative mx-auto group/canvas">
+        <canvas width="128" height="128"
+          class="rounded-lg border border-slate-800 shadow-md bg-[#0f172a] w-full max-w-[128px] transparency-grid"
+          data-canvas></canvas>
+      </div>
+      <div class="space-y-1.5">
+        <p class="text-[10px] sm:text-xs text-slate-400 text-center min-h-[2em] line-clamp-2" data-usage></p>
+        <button
+          class="w-full text-[10px] sm:text-xs px-2 py-1.5 rounded bg-slate-800 border border-slate-700 text-sky-300 hover:border-sky-400 hover:bg-slate-700/80 transition-all font-medium"
+          data-download>Download</button>
+      </div>
+
+      <!-- Tooltip Wrapper with padding bridge -->
+      <div
+        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute left-0 right-0 top-full pt-2 z-50 w-[200%] sm:w-[180%] -translate-x-1/4 sm:-translate-x-[22%] pointer-events-none group-hover:pointer-events-auto">
+        <div
+          class="text-xs text-slate-200 bg-slate-950/95 border border-slate-700 rounded-lg p-3 shadow-2xl backdrop-blur-sm text-left space-y-2">
+          <div class="text-sky-200 leading-relaxed" data-description></div>
+          <div class="pt-2 border-t border-slate-800">
+            <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">Will be downloaded as</p>
+            <p class="text-[10px] sm:text-xs text-slate-400 text-left min-h-[2em] line-clamp-2" data-filename>
+              settler_wagon_tech.png</p>
+          </div>
+          <div class="pt-2 border-t border-slate-800">
+            <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1">Examples</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-300" data-examples></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

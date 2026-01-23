@@ -1,0 +1,8 @@
+services:
+  aoe3-icon-maker:
+    image: busybox
+    command: httpd -f -p 80 -h /www
+    volumes:
+      - ./:/www:ro
+    ports:
+      - "8000:80"
