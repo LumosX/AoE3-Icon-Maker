@@ -62,7 +62,7 @@ const internalState = {
   portraitObjectUrl: null,
   maskObjectUrl: null,
   derivedUnitName: "settler_wagon",
-  // Sets are initialized below
+  // Sets are initialised below
   selected: null,
   selectedTopColours: null,
   selectedBottomColours: null,
@@ -86,7 +86,7 @@ const state = new Proxy(internalState, {
   }
 });
 
-// Initialize Reactive Sets
+// Initialise Reactive Sets
 state.selected = new ReactiveSet(null, singleFrames.map(f => f.id));
 state.selectedTopColours = new ReactiveSet(() => regenerateMixedCombos());
 state.selectedBottomColours = new ReactiveSet(() => regenerateMixedCombos());
@@ -117,9 +117,6 @@ const quickExportConfig = [
 
 // Initialization logic
 async function init() {
-  checkFeatures();
-
-  // Wrap defaults in try/catch so the app doesn't crash if local images fail to load
   try {
     await loadDefaults();
   } catch (e) {
@@ -136,12 +133,6 @@ async function init() {
   updateTooltips();
 
   bindGlobalEvents();
-}
-
-function checkFeatures() {
-  if (window.location.protocol === "file:") {
-    document.getElementById("cors-banner").classList.remove("hidden");
-  }
 }
 
 async function loadDefaults() {
