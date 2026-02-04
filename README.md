@@ -4,7 +4,7 @@ A client-side web application for generating icons for *Age of Empires III*. Uni
 In recent times in the Definitive Edition, bunches of home city cards now use **mixed-colour frames**, where the frame is bisected by its diagonal and consists of two colours. **This tool can create icons with mixed-colour frames as well**.
 
 <h2 align=center><a href="lumosx.github.io/AoE3-Icon-Maker">AoE3 Icon Maker (Github Pages)</a></h2>
-<p align=center><img height="300px" src="examples/masked_portrait.gif"></p>
+<p align=center><img height="400px" src="examples/demo.gif"></p>
 
 ## How to Use
 Usage should be quite self-explanatory, but here are instructions just in case.
