@@ -1,35 +1,10 @@
-# Age of Empires III DE Unit Icon Maker
+# Age of Empires III Unit Icon Maker
 A client-side web application for generating icons for *Age of Empires III*. Units, techs, and home city cards require various icons, which are distinguished by the colour of their frames; the game doesn't do any of this for us, so **you can use this tool to create icons with any frames you want**.
 
 In recent times in the Definitive Edition, bunches of home city cards now use **mixed-colour frames**, where the frame is bisected by its diagonal and consists of two colours. **This tool can create icons with mixed-colour frames as well**.
 
-## Alphas and Transparency
-The main reason for this tool's existence, however, is transparency. Unit portraits and icons use transparency with _alpha masks_.
-
-Read the following (collapsed) guide to understand what that means. If you know what an _alpha mask_ is, you may proceed onwards (and probably didn't need these instructions to begin with).
-
-<details>
-<summary><b>Guide: Alpha Masks & Transparency</b></summary>
-
-Anyone can extract an icon frame from the in-game files and put it in a photoshop file (and then never share it in a public location 😒), so why bother using this tool? Because of **transparency**.
-
-Icons used in game are usually PNGs, which makes it very easy for us to work with them. Except for one caveat: transparency. The PNGs used in game do not use transparency normally. If you extract an unit portrait from the game (that's `Game/UI/UIResources1.bar` when using the [Resource Manager](https://github.com/eBaeza/Resource-Manager)), you'll likely notice that it appears to be semi-transparent. You'll also likely notice that unit portraits and icons in the game change depending on your player colour.
-
-<img align="right" height="200" src="examples/zouave_in_image_editor.png">
-
-This zouave portrait, for example, that I have extracted from the game and opened in Paint (same result in Photoshop) appears to be transparent in the places where the player colour should be applied:
-
-So you might think you need to make a portion of your image transparent to have player colours show up, right? **WRONG.**
-
-The PNGs used for unit portraits actually use an _alpha mask_ to define their transparency. This means that ALL colours in the image are defined in all pixels, and there's an additional _channel_ that contains information about transparency. If you've done modding before, the concept may be familiar. Regardless, the point is that Paint (and Photoshop, and likely other image editors) do not display this information properly. In Photoshop, for example, you need an extension ([SuperPNG](https://fnord.com/)) in order to be able to open a transparent PNG without destroying the underlying colours of the image.
-
-(This phenomenon is called _premultiplication_: the colours of the image, in the R/G/B channels, are multiplied by the opacity values contained in the fourth "alpha" channel. This is done for valid reasons, but just happens to be something we don't want at this time.)
-
-Fortunately for us, all we need is just an easy way to make our own images (and, as a side effect, an easy way to split game icons for those of us who don't have editors that give us full liberty over the alpha channel).
-
-</details>
-
-
+<h2 align=center><a href="lumosx.github.io/AoE3-Icon-Maker">AoE3 Icon Maker (Github Pages)</a></h2>
+<p align=center><img height="300px" src="examples/masked_portrait.gif"></p>
 
 ## How to Use
 Usage should be quite self-explanatory, but here are instructions just in case.
@@ -79,14 +54,33 @@ Here's how icons generated using this image would look:
 
 
 
+## Alphas and Transparency
+The main reason for this tool's existence is transparency. Unit portraits and icons use transparency with proper _alpha masks_.
 
+Read the following (collapsed) guide to understand what that means. If you know what an _alpha mask_ is, you may proceed onwards (and probably didn't need these instructions to begin with).
 
+<details>
+<summary><b>Guide: Alpha Masks & Transparency</b></summary>
 
+Anyone can extract an icon frame from the in-game files and put it in a photoshop file (and then never share it in a public location 😒), so why bother using this tool? Because of **transparency**.
 
+Icons used in game are usually PNGs, which makes it very easy for us to work with them. Except for one caveat: transparency. The PNGs used in game do not use transparency normally. If you extract an unit portrait from the game (that's `Game/UI/UIResources1.bar` when using the [Resource Manager](https://github.com/eBaeza/Resource-Manager)), you'll likely notice that it appears to be semi-transparent. You'll also likely notice that unit portraits and icons in the game change depending on your player colour.
 
+<img align="right" height="200" src="examples/zouave_in_image_editor.png">
+
+This zouave portrait, for example, that I have extracted from the game and opened in Paint (same result in Photoshop) appears to be transparent in the places where the player colour should be applied:
+
+So you might think you need to make a portion of your image transparent to have player colours show up, right? **WRONG.**
+
+The PNGs used for unit portraits actually use an _alpha mask_ to define their transparency. This means that ALL colours in the image are defined in all pixels, and there's an additional _channel_ that contains information about transparency. If you've done modding before, the concept may be familiar. Regardless, the point is that Paint (and Photoshop, and likely other image editors) do not display this information properly. In Photoshop, for example, you need an extension ([SuperPNG](https://fnord.com/)) in order to be able to open a transparent PNG without destroying the underlying colours of the image.
+
+This phenomenon, the loss of colours in the transparent areas of the image, is called _premultiplication_: the colours of the image, in the R/G/B channels, are multiplied by the opacity values contained in the fourth "alpha" channel, and thus get zeroed out. This is done for certain valid reasons, but just happens to be something we don't want at this time.
+
+Fortunately for us, all we need is just an easy way to make our own images (and, as a side effect, an easy way to split game icons for those of us who don't have editors that give us full liberty over the alpha channel). And now, you have just such a way at your fingertips.
+</details>
 
 ## Running Locally
-Although this is a single HTML page, you should not attempt to run the local file. Use the [Github Pages site for this repo](https://lumosx.github.io/AoE3-Icon-Maker/) instead.
+Although this is a single HTML page, you should not attempt to run the local file. Due to security reasons, modern browsers prohibit you from downloading images or files from pages that you have opened directly from the HTML file. Instead , use the [Github Pages site for this repo](https://lumosx.github.io/AoE3-Icon-Maker/) instead.
 
 If you really want to run the tool locally:
 
