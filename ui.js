@@ -81,9 +81,11 @@ function createFrameNode(frame, template, state, getFilename) {
     checkbox.dataset.id = frame.id;
   }
 
-  const exEl = node.querySelector("[data-examples]");
-  exEl.innerHTML = "";
-  (frame.examples || []).forEach(ex => {
+  const examplesElement = node.querySelector("[data-examples]");
+  examplesElement.innerHTML = "";
+
+  const examples = frame.examples || [];
+  examples.forEach(ex => {
     const li = document.createElement("li");
     li.className = "truncate";
 
@@ -97,8 +99,15 @@ function createFrameNode(frame, template, state, getFilename) {
       li.textContent = ex.label;
     }
 
-    exEl.appendChild(li);
+    examplesElement.appendChild(li);
   });
+
+  if (examples.length === 0) {
+    const p = document.createElement("p");
+    p.className = "italic";
+    p.textContent = "No examples listed";
+    examplesElement.appendChild(p);
+  }
 
   const canvas = node.querySelector("[data-canvas]");
   canvas.dataset.canvasId = frame.id;
